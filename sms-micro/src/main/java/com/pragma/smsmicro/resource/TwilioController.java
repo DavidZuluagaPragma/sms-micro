@@ -1,5 +1,7 @@
-package com.pragma.smsmicro.recursos;
+package com.pragma.smsmicro.resource;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

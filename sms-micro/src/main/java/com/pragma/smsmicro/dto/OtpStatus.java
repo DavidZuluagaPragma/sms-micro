@@ -1,5 +1,5 @@
 package com.pragma.smsmicro.dto;
 
-public enum OtpEstado {
+public enum OtpStatus {
     DELIVERED,FAILED
 }

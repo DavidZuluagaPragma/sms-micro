@@ -1,9 +1,9 @@
 package com.pragma.smsmicro.servicios;
 
-import com.pragma.smsmicro.configuracion.TwilioConfiguracion;
-import com.pragma.smsmicro.dto.OtpEstado;
-import com.pragma.smsmicro.dto.ResetearContraRequestDto;
-import com.pragma.smsmicro.dto.ResetearContraRespuestaDto;
+import com.pragma.smsmicro.config.TwilioConfig;
+import com.pragma.smsmicro.dto.OtpStatus;
+import com.pragma.smsmicro.dto.PasswordResetRequestDto;
+import com.pragma.smsmicro.dto.PasswordResetResponseDto;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +18,26 @@ import java.util.Random;
 @Service
 public class TwilioOTPServicio {
     @Autowired
-    private TwilioConfiguracion twilioConfig;
+    private TwilioConfig twilioConfig;
 
     Map<String, String> otpMap = new HashMap<>();
 
-    public Mono<ResetearContraRespuestaDto> sendOTPForPasswordReset(ResetearContraRequestDto passwordResetRequestDto) {
+    public Mono<PasswordResetResponseDto> sendOTPForPasswordReset(PasswordResetRequestDto passwordResetRequestDto) {
 
-        ResetearContraRespuestaDto passwordResetResponseDto = null;
+        PasswordResetResponseDto passwordResetResponseDto = null;
         try {
-            PhoneNumber to = new PhoneNumber(passwordResetRequestDto.getNumeroDestino());
+            PhoneNumber to = new PhoneNumber(passwordResetRequestDto.getDestinationNumber());
             PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
             String otp = generateOTP();
-            String otpMessage = "Querido usuario, tu pedido ya esta listo, entrega este pin ##" + otp +" y disfruta!";
+            String otpMessage = " Dear user, your order is ready, deliver this pin ##" + otp +" and enjoy!";
             Message message = Message
                     .creator(to, from,
                             otpMessage)
                     .create();
-            otpMap.put(passwordResetRequestDto.getUsuario(), otp);
-            passwordResetResponseDto = new ResetearContraRespuestaDto(OtpEstado.DELIVERED, otpMessage);
+            otpMap.put(passwordResetRequestDto.getUser(), otp);
+            passwordResetResponseDto = new PasswordResetResponseDto(OtpStatus.DELIVERED, otpMessage);
         } catch (Exception ex) {
-            passwordResetResponseDto = new ResetearContraRespuestaDto(OtpEstado.FAILED, ex.getMessage());
+            passwordResetResponseDto = new PasswordResetResponseDto(OtpStatus.FAILED, ex.getMessage());
         }
         return Mono.just(passwordResetResponseDto);
     }
@@ -45,9 +45,9 @@ public class TwilioOTPServicio {
     public Mono<String> validateOTP(String userInputOtp, String userName) {
         if (userInputOtp.equals(otpMap.get(userName))) {
             otpMap.remove(userName,userInputOtp);
-            return Mono.just("Validar OTP por fa para completar operación !");
+            return Mono.just("Valid OTP please proceed with your transaction !");
         } else {
-            return Mono.error(new IllegalArgumentException("Otp invalido prueba de nuevo !"));
+            return Mono.error(new IllegalArgumentException("Invalid otp please retry !"));
         }
     }
 

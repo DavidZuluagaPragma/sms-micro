@@ -1,4 +1,4 @@
-package com.pragma.smsmicro.configuracion;
+package com.pragma.smsmicro.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "twilio")
 @Data
-public class TwilioConfiguracion {
+public class TwilioConfig {
     private String accountSid;
     private String authToken;
     private String trialNumber;
