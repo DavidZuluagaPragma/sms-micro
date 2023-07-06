@@ -1,6 +1,6 @@
 package com.pragma.smsmicro;
 
-import com.pragma.smsmicro.configuracion.TwilioConfiguracion;
+import com.pragma.smsmicro.config.TwilioConfig;
 import com.twilio.Twilio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 public class SmsMicroApplication {
 
 	@Autowired
-	private TwilioConfiguracion twilioConfig;
+	private TwilioConfig twilioConfig;
 
 	@PostConstruct
 	public void initTwilio(){
